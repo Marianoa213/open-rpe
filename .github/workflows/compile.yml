@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04 # Using an older LTS version for better legacy library compatibility
+    runs-on: ubuntu-latest # Using an older LTS version for better legacy library compatibility
 
     steps:
     - name: Checkout Repository
