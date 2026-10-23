@@ -1,0 +1,43 @@
+name: Cloud Compile Open Remote Play
+
+on:
+  workflow_dispatch: # Allows you to manually trigger the build with a button
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04 # Using an older LTS version for better legacy library compatibility
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive # Ensures legacy FFmpeg submodule is pulled
+
+    - name: Install Build Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          autoconf \
+          automake \
+          libtool \
+          pkg-config \
+          libwxgtk3.0-gtk3-dev \
+          libasound2-dev
+
+    - name: Run Autogen
+      run: ./autogen.sh
+
+    - name: Configure Build
+      run: ./configure
+
+    - name: Compile Code
+      run: make
+
+    - name: Upload Compiled Binary
+      uses: actions/upload-artifact@v4
+      with:
+        name: open-rp-compiled
+        path: |
+          orp
+          wxorp/wxorp
