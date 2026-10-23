@@ -33,7 +33,8 @@ jobs:
       run: ./autogen.sh
 
     - name: Configure Build
-      run: ./configure
+      run: |
+        ./configure --with-ffmpeg=system || ./configure LIBAVCODEC_CFLAGS=" " LIBAVCODEC_LIBS="-lavcodec" LIBAVFORMAT_CFLAGS=" " LIBAVFORMAT_LIBS="-lavformat" LIBAVUTIL_CFLAGS=" " LIBAVUTIL_LIBS="-lavutil" LIBSWSCALE_CFLAGS=" " LIBSWSCALE_LIBS="-lswscale"
 
     - name: Compile Code
       run: make
