@@ -1,17 +1,17 @@
 name: Cloud Compile Open Remote Play
 
 on:
-  workflow_dispatch: # Allows you to manually trigger the build with a button
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Using an older LTS version for better legacy library compatibility
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        submodules: recursive # Ensures legacy FFmpeg submodule is pulled
+        submodules: recursive
 
     - name: Install Build Dependencies
       run: |
@@ -22,7 +22,7 @@ jobs:
           automake \
           libtool \
           pkg-config \
-          libwxgtk3.0-gtk3-dev \
+          libwxgtk3.2-dev \
           libasound2-dev
 
     - name: Run Autogen
