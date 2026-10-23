@@ -5,36 +5,39 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 # Usamos un host base estable de soporte extendido
+    container:
+      image: ubuntu:14.04 # Forzamos a la nube a ejecutar un entorno nativo de la época del proyecto
 
     steps:
+    - name: Update Container Repositories
+      run: |
+        # Redirigimos las descargas a los servidores de archivo históricos de Ubuntu porque la versión 14.04 ya no está en los servidores principales
+        sed -i -re 's/([a-z]{2}\.)?://ubuntu.com|://ubuntu.com' /etc/apt/sources.list
+        apt-get update
+
+    - name: Install Legacy Build Tools
+      run: |
+        apt-get install -y \
+          build-essential \
+          git \
+          autoconf \
+          automake \
+          libtool \
+          pkg-config \
+          libwxgtk3.0-dev \
+          libasound2-dev
+
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         submodules: recursive
 
-    - name: Install Build Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          autoconf \
-          automake \
-          libtool \
-          pkg-config \
-          libwxgtk3.2-dev \
-          libasound2-dev \
-          libavcodec-dev \
-          libavformat-dev \
-          libavutil-dev \
-          libswscale-dev
-
     - name: Run Autogen
       run: ./autogen.sh
 
-    - name: Configure Build
-      run: |
-        ./configure --with-ffmpeg=system || ./configure LIBAVCODEC_CFLAGS=" " LIBAVCODEC_LIBS="-lavcodec" LIBAVFORMAT_CFLAGS=" " LIBAVFORMAT_LIBS="-lavformat" LIBAVUTIL_CFLAGS=" " LIBAVUTIL_LIBS="-lavutil" LIBSWSCALE_CFLAGS=" " LIBSWSCALE_LIBS="-lswscale"
+    - name: Configure Legacy Build
+      run: ./configure
 
     - name: Compile Code
       run: make
