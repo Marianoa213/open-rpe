@@ -23,7 +23,11 @@ jobs:
           libtool \
           pkg-config \
           libwxgtk3.2-dev \
-          libasound2-dev
+          libasound2-dev \
+          libavcodec-dev \
+          libavformat-dev \
+          libavutil-dev \
+          libswscale-dev
 
     - name: Run Autogen
       run: ./autogen.sh
